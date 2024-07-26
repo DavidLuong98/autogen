@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using AutoGen.LMStudio;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
 using FluentAssertions;
+using OpenAI.Chat;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -52,6 +52,8 @@ namespace AutoGen.Tests
         [ApiKeyFact("OPENAI_API_KEY", "AZURE_OPENAI_API_KEY", "AZURE_OPENAI_ENDPOINT")]
         public async Task GPTAgentVisionTestAsync()
         {
+            var functionDefinition = this.GetHighestLabelFunctionContract.ToOpenAIFunctionDefinition();
+
             var visionConfig = this.CreateOpenAIGPT4VisionConfig();
             var visionAgent = new GPTAgent(
                 name: "gpt",
@@ -65,16 +67,20 @@ namespace AutoGen.Tests
                 systemMessage: "You are a helpful AI assistant, return highest label from conversation",
                 config: gpt3Config,
                 temperature: 0,
-                functions: new[] { this.GetHighestLabelFunctionContract.ToOpenAIFunctionDefinition() },
+                chatTools: new[]
+                {
+                    ChatTool.CreateFunctionTool(functionDefinition.FunctionName, functionDefinition.Description,
+                        functionDefinition.Parameters)
+                },
                 functionMap: new Dictionary<string, Func<string, Task<string>>>
                 {
-                    { nameof(GetHighestLabel), this.GetHighestLabelWrapper },
+                    {nameof(GetHighestLabel), this.GetHighestLabelWrapper},
                 });
 
             var imageUri = new Uri(@"https://microsoft.github.io/autogen/assets/images/level2algebra-659ba95286432d9945fc89e84d606797.png");
-            var oaiMessage = new ChatRequestUserMessage(
-                new ChatMessageTextContentItem("which label has the highest inference cost"),
-                new ChatMessageImageContentItem(imageUri));
+            var oaiMessage = new UserChatMessage(
+                ChatMessageContentPart.CreateTextMessageContentPart("which label has the highest inference cost"),
+                ChatMessageContentPart.CreateImageMessageContentPart(imageUri));
             var multiModalMessage = new MultiModalMessage(Role.User,
                 [
                     new TextMessage(Role.User, "which label has the highest inference cost", from: "user"),
@@ -117,7 +123,8 @@ namespace AutoGen.Tests
         public async Task GPTFunctionCallAgentTestAsync()
         {
             var config = this.CreateAzureOpenAIGPT35TurboConfig();
-            var agentWithFunction = new GPTAgent("gpt", "You are a helpful AI assistant", config, 0, functions: new[] { this.EchoAsyncFunctionContract.ToOpenAIFunctionDefinition() });
+            var agentWithFunction = new GPTAgent("gpt", "You are a helpful AI assistant", config, 0,
+                chatTools: new[] {this.EchoAsyncFunctionContract.ToOpenAIFunctionDefinition()});
 
             await EchoFunctionCallTestAsync(agentWithFunction);
         }
@@ -234,7 +241,7 @@ namespace AutoGen.Tests
                 systemMessage: "You are a helpful AI assistant",
                 config: config,
                 temperature: 0,
-                functions: new[] { this.EchoAsyncFunctionContract.ToOpenAIFunctionDefinition() },
+                chatTools: new[] { this.EchoAsyncFunctionContract.ToOpenAIFunctionDefinition() },
                 functionMap: new Dictionary<string, Func<string, Task<string>>>
                 {
                     { nameof(EchoAsync), this.EchoAsyncWrapper },

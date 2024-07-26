@@ -5,8 +5,9 @@
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
 using Microsoft.SemanticKernel;
+using OpenAI;
+
 #endregion Using
 
 namespace AutoGen.SemanticKernel.Sample;

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Example12_TwoAgent_Fill_Application.cs
 
+using System.ClientModel;
 using System.Text;
 using AutoGen.Core;
 using AutoGen.OpenAI;
@@ -72,7 +73,7 @@ public partial class TwoAgent_Fill_Application
         var gpt3Config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var endPoint = gpt3Config.Endpoint ?? throw new Exception("Please set AZURE_OPENAI_ENDPOINT environment variable.");
         var apiKey = gpt3Config.ApiKey ?? throw new Exception("Please set AZURE_OPENAI_API_KEY environment variable.");
-        var openaiClient = new OpenAIClient(new Uri(endPoint), new Azure.AzureKeyCredential(apiKey));
+        var openaiClient = new AzureOpenAIClient(new Uri(endPoint), new ApiKeyCredential(apiKey));
 
         var instance = new TwoAgent_Fill_Application();
         var functionCallConnector = new FunctionCallMiddleware(
@@ -112,7 +113,7 @@ public partial class TwoAgent_Fill_Application
         var gpt3Config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var endPoint = gpt3Config.Endpoint ?? throw new Exception("Please set AZURE_OPENAI_ENDPOINT environment variable.");
         var apiKey = gpt3Config.ApiKey ?? throw new Exception("Please set AZURE_OPENAI_API_KEY environment variable.");
-        var openaiClient = new OpenAIClient(new Uri(endPoint), new Azure.AzureKeyCredential(apiKey));
+        var openaiClient = new AzureOpenAIClient(new Uri(endPoint), new Azure.AzureKeyCredential(apiKey));
 
         var chatAgent = new OpenAIChatAgent(
             openAIClient: openaiClient,
@@ -145,7 +146,7 @@ public partial class TwoAgent_Fill_Application
         var gpt3Config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var endPoint = gpt3Config.Endpoint ?? throw new Exception("Please set AZURE_OPENAI_ENDPOINT environment variable.");
         var apiKey = gpt3Config.ApiKey ?? throw new Exception("Please set AZURE_OPENAI_API_KEY environment variable.");
-        var openaiClient = new OpenAIClient(new Uri(endPoint), new Azure.AzureKeyCredential(apiKey));
+        var openaiClient = new AzureOpenAIClient(new Uri(endPoint), new Azure.AzureKeyCredential(apiKey));
 
         var chatAgent = new OpenAIChatAgent(
             openAIClient: openaiClient,

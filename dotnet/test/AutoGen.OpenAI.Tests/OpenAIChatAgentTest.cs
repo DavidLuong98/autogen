@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoGen.OpenAI.Extension;
 using AutoGen.Tests;
-using Azure.AI.OpenAI;
 using FluentAssertions;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace AutoGen.OpenAI.Tests;
 
@@ -234,7 +235,7 @@ public partial class OpenAIChatAgentTest
     {
         var deployName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOY_NAME") ?? throw new Exception("Please set AZURE_OPENAI_DEPLOY_NAME environment variable.");
         var openaiClient = CreateOpenAIClientFromAzureOpenAI();
-        var options = new ChatCompletionsOptions(deployName, [])
+        var options = new ChatCompletionOptions(deployName)
         {
             Temperature = 0.7f,
             MaxTokens = 1,
@@ -248,26 +249,6 @@ public partial class OpenAIChatAgentTest
 
         var respond = await openAIChatAgent.SendAsync("hello");
         respond.GetContent()?.Should().NotBeNullOrEmpty();
-    }
-
-    [ApiKeyFact("AZURE_OPENAI_API_KEY", "AZURE_OPENAI_ENDPOINT", "AZURE_OPENAI_DEPLOY_NAME")]
-    public async Task ItThrowExceptionWhenChatCompletionOptionContainsMessages()
-    {
-        var deployName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOY_NAME") ?? throw new Exception("Please set AZURE_OPENAI_DEPLOY_NAME environment variable.");
-        var openaiClient = CreateOpenAIClientFromAzureOpenAI();
-        var options = new ChatCompletionsOptions(deployName, [new ChatRequestUserMessage("hi")])
-        {
-            Temperature = 0.7f,
-            MaxTokens = 1,
-        };
-
-        var action = () => new OpenAIChatAgent(
-            openAIClient: openaiClient,
-            name: "assistant",
-            options: options)
-            .RegisterMessageConnector();
-
-        action.Should().ThrowExactly<ArgumentException>().WithMessage("Messages should not be provided in options");
     }
 
     private OpenAIClient CreateOpenAIClientFromAzureOpenAI()

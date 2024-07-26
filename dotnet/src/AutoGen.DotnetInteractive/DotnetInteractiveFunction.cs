@@ -3,9 +3,9 @@
 
 using System.Text;
 using System.Text.Json;
-using Azure.AI.OpenAI;
 using Microsoft.DotNet.Interactive.Documents;
 using Microsoft.DotNet.Interactive.Documents.Jupyter;
+using OpenAI.Assistants;
 
 namespace AutoGen.DotnetInteractive;
 
@@ -190,11 +190,11 @@ public class DotnetInteractiveFunction : IDisposable
         return RunCode(schema!.code);
     }
 
-    public FunctionDefinition RunCodeFunction
+    public FunctionToolDefinition RunCodeFunction
     {
-        get => new FunctionDefinition
+        get => new FunctionToolDefinition
         {
-            Name = @"RunCode",
+            FunctionName = @"RunCode",
             Description = """
 Run existing dotnet code from message. Don't modify the code, run it as is.
 """,
@@ -238,11 +238,11 @@ Run existing dotnet code from message. Don't modify the code, run it as is.
         return InstallNugetPackages(schema!.nugetPackages);
     }
 
-    public FunctionDefinition InstallNugetPackagesFunction
+    public FunctionToolDefinition InstallNugetPackagesFunction
     {
-        get => new FunctionDefinition
+        get => new FunctionToolDefinition
         {
-            Name = @"InstallNugetPackages",
+            FunctionName = @"InstallNugetPackages",
             Description = """
 Install nuget packages.
 """,

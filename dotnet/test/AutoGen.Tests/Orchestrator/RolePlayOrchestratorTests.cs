@@ -2,6 +2,7 @@
 // RolePlayOrchestratorTests.cs
 
 using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -18,6 +19,7 @@ using AutoGen.OpenAI.Extension;
 using Azure.AI.OpenAI;
 using FluentAssertions;
 using Moq;
+using OpenAI;
 using Xunit;
 
 namespace AutoGen.Tests;
@@ -218,7 +220,7 @@ public class RolePlayOrchestratorTests
         var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new Exception("Please set AZURE_OPENAI_ENDPOINT environment variable.");
         var key = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY") ?? throw new Exception("Please set AZURE_OPENAI_API_KEY environment variable.");
         var deployName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOY_NAME") ?? throw new Exception("Please set AZURE_OPENAI_DEPLOY_NAME environment variable.");
-        var openaiClient = new OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(key));
+        var openaiClient = new AzureOpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(key));
         var openAIChatAgent = new OpenAIChatAgent(
             openAIClient: openaiClient,
             name: "assistant",
@@ -233,7 +235,7 @@ public class RolePlayOrchestratorTests
     {
         var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
         var model = "gpt-4o";
-        var openaiClient = new OpenAIClient(apiKey);
+        var openaiClient = new OpenAIClient(new ApiKeyCredential(apiKey!));
         var openAIChatAgent = new OpenAIChatAgent(
             openAIClient: openaiClient,
             name: "assistant",
@@ -248,7 +250,7 @@ public class RolePlayOrchestratorTests
     {
         var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
         var model = "gpt-4o-mini";
-        var openaiClient = new OpenAIClient(apiKey);
+        var openaiClient = new OpenAIClient(new ApiKeyCredential(apiKey!));
         var openAIChatAgent = new OpenAIChatAgent(
             openAIClient: openaiClient,
             name: "assistant",

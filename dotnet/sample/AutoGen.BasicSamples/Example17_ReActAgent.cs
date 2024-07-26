@@ -4,7 +4,7 @@
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+using OpenAI;
 
 namespace AutoGen.BasicSample;
 

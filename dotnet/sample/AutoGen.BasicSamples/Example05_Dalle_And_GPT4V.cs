@@ -4,8 +4,9 @@
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
 using FluentAssertions;
+using OpenAI;
+using OpenAI.Images;
 using autogen = AutoGen.LLMConfigAPI;
 
 public partial class Example05_Dalle_And_GPT4V
@@ -30,16 +31,14 @@ public partial class Example05_Dalle_And_GPT4V
         // and return url.
         var option = new ImageGenerationOptions
         {
-            Size = ImageSize.Size1024x1024,
-            Style = ImageGenerationStyle.Vivid,
-            ImageCount = 1,
-            Prompt = prompt,
-            Quality = ImageGenerationQuality.Standard,
-            DeploymentName = "dall-e-3",
+            Size = GeneratedImageSize.W1024xH1024,
+            Style = GeneratedImageStyle.Vivid,
+            User = null,
+            Quality = GeneratedImageQuality.Standard,
         };
 
-        var imageResponse = await openAIClient.GetImageGenerationsAsync(option);
-        var imageUrl = imageResponse.Value.Data.First().Url.OriginalString;
+        var imageResponse = await openAIClient.GetImageClient("dall-e-3").GenerateImageAsync(prompt, option);
+        var imageUrl = imageResponse.Value.ImageUri;
 
         return $@"// ignore this line [IMAGE_GENERATION]
 The image is generated from prompt {prompt}

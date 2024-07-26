@@ -6,8 +6,9 @@ using System.Text.Json.Serialization;
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
 using FluentAssertions;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace AutoGen.BasicSample;
 
@@ -26,7 +27,7 @@ public class Use_Json_Mode
             modelName: model,
             systemMessage: "You are a helpful assistant designed to output JSON.",
             seed: 0, // explicitly set a seed to enable deterministic output
-            responseFormat: ChatCompletionsResponseFormat.JsonObject) // set response format to JSON object to enable JSON mode
+            chatResponseFormat: ChatResponseFormat.JsonObject) // set response format to JSON object to enable JSON mode
             .RegisterMessageConnector()
             .RegisterPrintMessage();
         #endregion create_agent

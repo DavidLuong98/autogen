@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // PrintMessageMiddlewareCodeSnippet.cs
 
+using System.ClientModel;
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure;
 using Azure.AI.OpenAI;
 
 namespace AutoGen.BasicSample.CodeSnippet;
@@ -15,7 +15,7 @@ internal class PrintMessageMiddlewareCodeSnippet
     {
         var config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var endpoint = new Uri(config.Endpoint);
-        var openaiClient = new OpenAIClient(endpoint, new AzureKeyCredential(config.ApiKey));
+        var openaiClient = new AzureOpenAIClient(endpoint, new ApiKeyCredential(config.ApiKey));
         var agent = new OpenAIChatAgent(openaiClient, "assistant", config.DeploymentName)
             .RegisterMessageConnector();
 
@@ -31,7 +31,7 @@ internal class PrintMessageMiddlewareCodeSnippet
     {
         var config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var endpoint = new Uri(config.Endpoint);
-        var openaiClient = new OpenAIClient(endpoint, new AzureKeyCredential(config.ApiKey));
+        var openaiClient = new AzureOpenAIClient(endpoint, new ApiKeyCredential(config.ApiKey));
 
         #region print_message_streaming
         var streamingAgent = new OpenAIChatAgent(openaiClient, "assistant", config.DeploymentName)

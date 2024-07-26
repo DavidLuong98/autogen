@@ -3,7 +3,8 @@
 
 using System.Text.Json;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+using OpenAI.Assistants;
+
 #region weather_report_using_statement
 using AutoGen.Core;
 #endregion weather_report_using_statement
@@ -32,7 +33,7 @@ public partial class TypeSafeFunctionCall
         var functionInstance = new TypeSafeFunctionCall();
 
         // Get the generated function definition
-        FunctionDefinition functionDefiniton = functionInstance.WeatherReportFunctionContract.ToOpenAIFunctionDefinition();
+        FunctionToolDefinition functionDefiniton = functionInstance.WeatherReportFunctionContract.ToOpenAIFunctionDefinition();
 
         // Get the generated function wrapper
         Func<string, Task<string>> functionWrapper = functionInstance.WeatherReportWrapper;
@@ -69,11 +70,11 @@ public class TypeSafeFunctionCallCodeSnippet
 
     #region code_snippet_1
     // file: FunctionDefinition.generated.cs
-    public FunctionDefinition UpperCaseFunction
+    public FunctionToolDefinition UpperCaseFunction
     {
-        get => new FunctionDefinition
+        get => new FunctionToolDefinition
         {
-            Name = @"UpperCase",
+            FunctionName = @"UpperCase",
             Description = "convert input to upper case",
             Parameters = BinaryData.FromObjectAsJson(new
             {

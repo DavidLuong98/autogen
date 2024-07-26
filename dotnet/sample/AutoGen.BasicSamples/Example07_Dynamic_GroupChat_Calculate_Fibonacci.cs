@@ -10,6 +10,7 @@ using AutoGen.DotnetInteractive;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
 using FluentAssertions;
+using OpenAI.Chat;
 
 public partial class Example07_Dynamic_GroupChat_Calculate_Fibonacci
 {
@@ -135,11 +136,13 @@ public partial class Example07_Dynamic_GroupChat_Calculate_Fibonacci
     {
         var gpt3Config = LLMConfiguration.GetAzureOpenAIGPT3_5_Turbo();
         var functions = new Example07_Dynamic_GroupChat_Calculate_Fibonacci();
+
+        var functionDefinition = functions.ReviewCodeBlockFunctionContract.ToOpenAIFunctionDefinition(); ;
         var reviewer = new GPTAgent(
             name: "code_reviewer",
             systemMessage: @"You review code block from coder",
             config: gpt3Config,
-            functions: [functions.ReviewCodeBlockFunctionContract.ToOpenAIFunctionDefinition()],
+            chatTools: [ChatTool.CreateFunctionTool(functionDefinition.FunctionName, functionDefinition.Description, functionDefinition.Parameters)],
             functionMap: new Dictionary<string, Func<string, Task<string>>>()
             {
                 { nameof(ReviewCodeBlock), functions.ReviewCodeBlockWrapper },

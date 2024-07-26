@@ -6,8 +6,8 @@ using ApprovalTests;
 using ApprovalTests.Namers;
 using ApprovalTests.Reporters;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
 using FluentAssertions;
+using OpenAI.Assistants;
 using Xunit;
 
 namespace AutoGen.SourceGenerator.Tests
@@ -102,11 +102,11 @@ namespace AutoGen.SourceGenerator.Tests
 
         [UseReporter(typeof(DiffReporter))]
         [UseApprovalSubdirectory("ApprovalTests")]
-        private void VerifyFunctionDefinition(FunctionDefinition function)
+        private void VerifyFunctionDefinition(FunctionToolDefinition function)
         {
             var func = new
             {
-                name = function.Name,
+                name = function.FunctionName,
                 description = function.Description.Replace(Environment.NewLine, ","),
                 parameters = function.Parameters.ToObjectFromJson<object>(options: jsonSerializerOptions),
             };

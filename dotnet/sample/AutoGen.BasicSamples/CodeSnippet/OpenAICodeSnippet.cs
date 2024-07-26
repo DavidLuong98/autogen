@@ -5,9 +5,12 @@
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+
 #endregion using_statement
+
 using FluentAssertions;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace AutoGen.BasicSample.CodeSnippet;
 #region weather_function
@@ -45,18 +48,18 @@ public partial class OpenAICodeSnippet
         // OpenAIChatAgent supports the following message types:
         // - IMessage<ChatRequestMessage> where ChatRequestMessage is from Azure.AI.OpenAI
 
-        var helloMessage = new ChatRequestUserMessage("Hello");
+        var helloMessage = new UserChatMessage("Hello");
 
         // Use MessageEnvelope.Create to create an IMessage<ChatRequestMessage>
         var chatMessageContent = MessageEnvelope.Create(helloMessage);
         var reply = await openAIChatAgent.SendAsync(chatMessageContent);
 
-        // The type of reply is MessageEnvelope<ChatResponseMessage> where ChatResponseMessage is from Azure.AI.OpenAI
-        reply.Should().BeOfType<MessageEnvelope<ChatResponseMessage>>();
+        // The type of reply is MessageEnvelope<ChatCompletion> where ChatCompletion is from Azure.AI.OpenAI
+        reply.Should().BeOfType<MessageEnvelope<ChatCompletion>>();
 
         // You can un-envelop the reply to get the ChatResponseMessage
-        ChatResponseMessage response = reply.As<MessageEnvelope<ChatResponseMessage>>().Content;
-        response.Role.Should().Be(ChatRole.Assistant);
+        ChatCompletion response = reply.As<MessageEnvelope<ChatCompletion>>().Content;
+        response.Role.Should().Be(ChatMessageRole.Assistant);
         #endregion create_openai_chat_agent
 
         #region create_openai_chat_agent_streaming
@@ -64,8 +67,8 @@ public partial class OpenAICodeSnippet
 
         await foreach (var streamingMessage in streamingReply)
         {
-            streamingMessage.Should().BeOfType<MessageEnvelope<StreamingChatCompletionsUpdate>>();
-            streamingMessage.As<MessageEnvelope<StreamingChatCompletionsUpdate>>().Content.Role.Should().Be(ChatRole.Assistant);
+            streamingMessage.Should().BeOfType<MessageEnvelope<StreamingChatCompletionUpdate>>();
+            streamingMessage.As<MessageEnvelope<StreamingChatCompletionUpdate>>().Content.Role.Should().Be(ChatMessageRole.Assistant);
         }
         #endregion create_openai_chat_agent_streaming
 
@@ -77,7 +80,7 @@ public partial class OpenAICodeSnippet
         // now the agentWithConnector supports more message types
         var messages = new IMessage[]
         {
-            MessageEnvelope.Create(new ChatRequestUserMessage("Hello")),
+            MessageEnvelope.Create(new UserChatMessage("Hello")),
             new TextMessage(Role.Assistant, "Hello", from: "user"),
             new MultiModalMessage(Role.Assistant,
                 [

@@ -4,8 +4,8 @@
 #region using_statement
 using AutoGen.Core;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
-using Azure.Core.Pipeline;
+using OpenAI;
+
 #endregion using_statement
 
 namespace AutoGen.OpenAI.Sample;
@@ -35,10 +35,15 @@ public class Connect_To_Ollama
     {
         #region create_agent
         using var client = new HttpClient(new CustomHttpClientHandler("http://localhost:11434"));
+        var option = new OpenAIClientOptions()
+        {
+
+        };
+        /*
         var option = new OpenAIClientOptions(OpenAIClientOptions.ServiceVersion.V2024_04_01_Preview)
         {
             Transport = new HttpClientTransport(client),
-        };
+        };*/
 
         // api-key is not required for local server
         // so you can use any string here

@@ -6,8 +6,8 @@ using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
-using Azure.AI.OpenAI;
 using Microsoft.SemanticKernel;
+using OpenAI;
 
 namespace AutoGen.BasicSample;
 

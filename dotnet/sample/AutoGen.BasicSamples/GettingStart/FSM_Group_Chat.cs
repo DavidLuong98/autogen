@@ -2,11 +2,13 @@
 // FSM_Group_Chat.cs
 
 using System.Text;
+using OpenAI;
+
 #region Using
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+
 #endregion Using
 
 namespace AutoGen.BasicSample;

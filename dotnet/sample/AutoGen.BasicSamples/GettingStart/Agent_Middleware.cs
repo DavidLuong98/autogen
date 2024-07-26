@@ -5,9 +5,11 @@
 using AutoGen.Core;
 using AutoGen.OpenAI;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+
 #endregion Using
 using FluentAssertions;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace AutoGen.BasicSample;
 
@@ -29,7 +31,7 @@ public class Agent_Middleware
             .RegisterMiddleware(async (messages, option, innerAgent, ct) =>
             {
                 var reply = await innerAgent.GenerateReplyAsync(messages, option, ct);
-                if (reply is MessageEnvelope<ChatCompletions> chatCompletions)
+                if (reply is MessageEnvelope<ChatCompletion> chatCompletions)
                 {
                     var tokenCount = chatCompletions.Content.Usage.TotalTokens;
                     totalTokenCount += tokenCount;

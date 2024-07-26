@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using AutoGen.Core;
 using AutoGen.LMStudio;
 using AutoGen.OpenAI.Extension;
-using Azure.AI.OpenAI;
+using OpenAI.Assistants;
 
 namespace AutoGen.BasicSample;
 
@@ -43,14 +43,14 @@ public partial class Example09_LMStudio_FunctionCall
         return $"[Function] Here are the search results for {query}.";
     }
 
-    private static object SerializeFunctionDefinition(FunctionDefinition functionDefinition)
+    private static object SerializeFunctionDefinition(FunctionToolDefinition functionDefinition)
     {
         return new
         {
             type = "function",
             function = new
             {
-                name = functionDefinition.Name,
+                name = functionDefinition.FunctionName,
                 description = functionDefinition.Description,
                 parameters = functionDefinition.Parameters.ToObjectFromJson<object>(),
             }
